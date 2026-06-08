@@ -1,42 +1,43 @@
-// Clase para el mazo de cartas del jugador
-// se usa para barajar robar y repartir cartas al empezar
+// mazo de cartas implementado como pila con ArrayDeque
+// robar del mazo es pop() O(1) lo que modela bien sacar la carta de arriba
 package model;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 public class Mazo {
 
-    // cartas que quedan en el mazo
-    private List<Carta> cartas;
+    // pila de cartas, la cabeza es la que se roba primero
+    private ArrayDeque<Carta> cartas;
 
     public Mazo(boolean usarFabrica) {
-        this.cartas = new ArrayList<>();
+        this.cartas = new ArrayDeque<>();
         if (usarFabrica) {
             this.agregarCartas(FabricaDeCartas.crearMazoCompleto());
             this.barajar();
         }
     }
 
-    // mezcla las cartas del mazo aleatoriamente
+    // ArrayDeque no tiene shuffle directo asi que convertimos ida y vuelta
     public void barajar() {
-        Collections.shuffle(cartas);
+        List<Carta> lista = new ArrayList<>(cartas);
+        Collections.shuffle(lista);
+        cartas.clear();
+        for (Carta c : lista) cartas.push(c);
     }
 
-    // roba la primera carta del mazo
+    // roba la carta de arriba del mazo en O(1)
     public Carta robar() {
         if (estaVacio()) return null;
-        return cartas.remove(0);
+        return cartas.pop();
     }
 
-    // revisa si el mazo ya no tiene cartas
     public boolean estaVacio() { return cartas.isEmpty(); }
-
-    // devuelve cuantas cartas quedan en el mazo
     public int tamano() { return cartas.size(); }
 
-    // saca varias cartas para dar la mano inicial
+    // saca n cartas para armar la mano inicial
     public List<Carta> repartir(int n) {
         List<Carta> manoRepartida = new ArrayList<>();
         for (int i = 0; i < n; i++) {
@@ -47,13 +48,17 @@ public class Mazo {
         return manoRepartida;
     }
 
-    // agrega cartas al mazo sin barajar
     public void agregarCartas(List<? extends Carta> nuevasCartas) {
-        this.cartas.addAll(nuevasCartas);
+        for (Carta c : nuevasCartas) cartas.push(c);
     }
 
-    // devuelve copia de la lista de cartas del mazo
+    // copia de la lista para serializar sin tocar la pila real
     public List<Carta> getCartas() {
         return new ArrayList<>(cartas);
+    }
+
+    // agrega al final de la pila, se usa al cargar partida
+    public void agregarCarta(Carta carta) {
+        cartas.addLast(carta);
     }
 }
