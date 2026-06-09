@@ -1,0 +1,4 @@
+clase=model.cards.magic.EspadaDeZeus
+nombre=Espada de Zeus
+descripcion=Aumenta +500 ATK a un monstruo en tu campo.
+tipo=MAGICA
