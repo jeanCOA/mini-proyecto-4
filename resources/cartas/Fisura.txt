@@ -1,0 +1,4 @@
+clase=model.cards.magic.Fisura
+nombre=Fisura
+descripcion=Destruye al monstruo con menor ATK del oponente.
+tipo=MAGICA

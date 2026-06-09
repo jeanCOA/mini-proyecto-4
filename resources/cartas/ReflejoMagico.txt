@@ -1,0 +1,4 @@
+clase=model.cards.trap.ReflejoMagico
+nombre=Reflejo Magico
+descripcion=Inflige 500 LP de daño directo al oponente.
+tipo=TRAMPA

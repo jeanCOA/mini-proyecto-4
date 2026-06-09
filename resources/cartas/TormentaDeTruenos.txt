@@ -1,0 +1,4 @@
+clase=model.cards.trap.TormentaDeTruenos
+nombre=Tormenta de Truenos
+descripcion=Inflige 300 de daño al oponente por cada monstruo en su campo.
+tipo=TRAMPA
