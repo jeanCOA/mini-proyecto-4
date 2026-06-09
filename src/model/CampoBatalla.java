@@ -95,6 +95,7 @@ public class CampoBatalla implements SujetoDuelo { // clase del duelo principal
         return log.toString(); // devuelvo el log
     }
 
+    
     public void terminarTurno() { // termina el turno actual
         notificarObservadores("FIN_TURNO", jugadorActivo.getNombre() + " termina turno"); // aviso fin de turno
         jugadorActivo = (jugadorActivo == jugador1) ? jugador2 : jugador1; // paso el turno al otro
