@@ -1,5 +1,4 @@
-// campo de batalla donde ocurre todo el duelo
-// implementa SujetoDuelo para notificar a los observadores cuando algo importante pasa
+// Aquí se mueve todo el duelo: turnos, ataques, y avisos a la UI.
 package model;
 
 import java.util.ArrayList;
@@ -17,7 +16,7 @@ public class CampoBatalla implements SujetoDuelo {
     private boolean esPrimerTurno = true;
     private int turnoActual = 0;
 
-    // lista de observadores registrados, se notifican cuando algo cambia
+    // Lista de ventanas o listeners que quieren saber qué pasa en el duelo.
     private List<ObservadorDuelo> observadores = new ArrayList<>();
 
     public CampoBatalla(Jugador jugador1, Jugador jugador2) {
@@ -35,7 +34,7 @@ public class CampoBatalla implements SujetoDuelo {
         observadores.remove(obs);
     }
 
-    // avisa a todos los que estan escuchando que algo paso
+    // Le avisa a todos los listeners que algo cambió en el duelo.
     @Override
     public void notificarObservadores(String tipoEvento, String detalle) {
         for (ObservadorDuelo obs : observadores) {
@@ -44,6 +43,7 @@ public class CampoBatalla implements SujetoDuelo {
     }
 
     public void iniciarDuelo() {
+        // Primero se arma el mazo y se reparten cartas; luego se decide quién empieza.
         repartirCartasIniciales();
         Random random = new Random();
         jugadorActivo = random.nextBoolean() ? jugador1 : jugador2;
@@ -51,6 +51,7 @@ public class CampoBatalla implements SujetoDuelo {
     }
 
     private void repartirCartasIniciales() {
+        // Se crea un mazo completo, se mezcla y se parte en dos para cada jugador.
         List<Carta> mazoCompleto = FabricaDeCartas.crearMazoCompleto();
         Collections.shuffle(mazoCompleto);
 
@@ -65,6 +66,7 @@ public class CampoBatalla implements SujetoDuelo {
     }
 
     public String prepararTurno() {
+        // Cada turno cambia el jugador activo y resetea lo que se puede hacer ese giro.
         turnoActual++;
         jugadorActivo.resetTurno();
 
@@ -73,7 +75,7 @@ public class CampoBatalla implements SujetoDuelo {
            .append(" : ").append(jugadorActivo.getNombre()).append(" ===\n");
 
         if (esPrimerTurno) {
-            // primer turno: no se roba carta y no se puede atacar
+            // En el primer turno no roba ni puede atacar todavía, eso es lo que hace la regla.
             log.append("[Primer turno] ").append(jugadorActivo.getNombre())
                .append(" no roba carta y no puede atacar\n");
             for (CartaMonstruo m : jugadorActivo.getCampo()) {
@@ -99,6 +101,7 @@ public class CampoBatalla implements SujetoDuelo {
     }
 
     public void terminarTurno() {
+        // Avisamos que terminó el turno y luego cambiamos de jugador para el siguiente.
         notificarObservadores("FIN_TURNO", jugadorActivo.getNombre() + " termina turno");
         jugadorActivo = (jugadorActivo == jugador1) ? jugador2 : jugador1;
         esPrimerTurno = false;
@@ -106,6 +109,7 @@ public class CampoBatalla implements SujetoDuelo {
 
     public String resolverCombate(CartaMonstruo atacante, CartaMonstruo defensor,
                                    Jugador jugActivo, Jugador oponente) {
+        // Aquí está la parte más importante: se calcula quién gana el choque y se aplican daños o destrucciones.
         StringBuilder log = new StringBuilder();
         log.append(atacante.getNombre()).append(" ataca a ").append(defensor.getNombre()).append("!\n");
 
@@ -145,6 +149,7 @@ public class CampoBatalla implements SujetoDuelo {
     }
 
     public String ataqueDirecto(CartaMonstruo atacante, Jugador oponente) {
+        // Si no hay monstruo rival, el ataque va directo al LP del otro jugador.
         oponente.recibirDanio(atacante.getAtk());
         atacante.marcarComoAtacado();
         notificarObservadores("ATAQUE_DIRECTO", atacante.getNombre() + " -> " + oponente.getNombre());
@@ -161,6 +166,7 @@ public class CampoBatalla implements SujetoDuelo {
     }
 
     public void destruirMenorAtkOponente(Jugador jugActivo) {
+        // Esto busca al monstruo más débil del rival para borrarlo rápido.
         Jugador oponente = (jugActivo == jugador1) ? jugador2 : jugador1;
         if (oponente.getCampo().isEmpty()) return;
         CartaMonstruo menor = oponente.getCampo().get(0);
@@ -175,6 +181,7 @@ public class CampoBatalla implements SujetoDuelo {
     }
 
     public boolean hayGanador() {
+        // Si alguien ya no tiene LP o se quedó sin mazo, el duelo terminó.
         return jugador1.getLp() <= 0
             || jugador2.getLp() <= 0
             || !jugador1.tieneCartasEnMazo()
@@ -200,7 +207,7 @@ public class CampoBatalla implements SujetoDuelo {
     public int getTurnoActual()     { return turnoActual; }
     public boolean isEsPrimerTurno(){ return esPrimerTurno; }
 
-    // setters usados al cargar partida desde archivo
+    // Estos setters sirven para cargar una partida guardada sin romper el estado.
     public void setTurnoActual(int turno) { this.turnoActual = turno; }
     public void setEsPrimerTurno(boolean v) { this.esPrimerTurno = v; }
     public void setJugadorActivo(Jugador j) { this.jugadorActivo = j; }
