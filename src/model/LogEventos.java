@@ -1,42 +1,37 @@
-// log de eventos del turno usando una Queue
-// los eventos se encolan en orden y se consumen de la misma forma
-package model;
+// log de eventos del turno usando una Queue    // estilo de comentario simple
+// los eventos se encolan en orden y se consumen de la misma forma    // primero entra primero sale
+package model; // paquete del modelo
 
-import java.util.ArrayDeque;
-import java.util.Queue;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.ArrayDeque; // implementacion de cola FIFO
+import java.util.Queue; // interfaz de cola
+import java.util.ArrayList; // lista para copiar eventos
+import java.util.List; // tipo lista
 
-public class LogEventos {
+public class LogEventos { // clase que guarda los eventos
 
-    // cola FIFO: primero en entrar primero en salir igual que los eventos del duelo
-    private Queue<String> eventos;
+    private Queue<String> eventos; // cola de mensajes del duelo
 
-    public LogEventos() {
-        eventos = new ArrayDeque<>();
+    public LogEventos() { // constructor
+        eventos = new ArrayDeque<>(); // creo cola vacia
     }
 
-    // agrega un evento al final de la cola
-    public void registrar(String mensaje) {
-        eventos.offer(mensaje);
+    public void registrar(String mensaje) { // agrega un evento al final
+        eventos.offer(mensaje); // encola el mensaje
     }
 
-    // saca y devuelve el evento mas antiguo
-    public String siguiente() {
-        return eventos.poll();
+    public String siguiente() { // devuelve el evento mas viejo
+        return eventos.poll(); // saca y retorna el primer evento
     }
 
-    public boolean tieneEventos() {
-        return !eventos.isEmpty();
+    public boolean tieneEventos() { // pregunta si hay eventos pendientes
+        return !eventos.isEmpty(); // true si hay algo en la cola
     }
 
-    // limpia la cola al cambiar de turno
-    public void limpiar() {
-        eventos.clear();
+    public void limpiar() { // borra todos los eventos
+        eventos.clear(); // deja la cola vacia
     }
 
-    // devuelve todos los eventos sin vaciar la cola
-    public List<String> getTodos() {
-        return new ArrayList<>(eventos);
+    public List<String> getTodos() { // copia todos los eventos sin borrarlos
+        return new ArrayList<>(eventos); // devuelve lista nueva
     }
 }
