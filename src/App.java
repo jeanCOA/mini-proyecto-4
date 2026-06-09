@@ -10,7 +10,7 @@ import view.ConsolaDuelo;
 import view.VentanaInicio;
 
 // Este es el punto de entrada del juego.
-// Aquí le preguntamos al usuario qué modo quiere usar y arrancamos la vista correspondiente.
+// Aqui le preguntamos al usuario que modo quiere usar y arrancamos la vista correspondiente.
 public class App {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
@@ -21,8 +21,13 @@ public class App {
         System.out.println("  [2] Modo Consola");
         System.out.println("  [3] Ver estadisticas (consola)");
         System.out.print("Opcion: ");
+        System.out.flush();
 
-        String opcion = scanner.nextLine().trim();
+        // Leemos lineas hasta obtener una opcion valida (evita problemas con \r\n en Windows)
+        String opcion = "";
+        while (opcion.isEmpty() && scanner.hasNextLine()) {
+            opcion = scanner.nextLine().trim();
+        }
 
         if (opcion.equals("2")) {
             // Modo consola: armamos el duelo y lo conectamos con la vista de texto.
@@ -35,11 +40,11 @@ public class App {
             controller.setVista(vista);
             vista.iniciarJuego();
         } else if (opcion.equals("3")) {
-            // Este caso solo muestra las estadísticas guardadas y termina ahí.
+            // Este caso solo muestra las estadisticas guardadas y termina ahi.
             System.out.println(GestorPersistencia.getInstance().leerEstadisticas());
             scanner.close();
         } else {
-            // Si no eligió otra cosa, arrancamos el modo GUI por defecto con la pantalla de inicio.
+            // Si no eligio otra cosa, arrancamos el modo GUI por defecto con la pantalla de inicio.
             scanner.close();
             SwingUtilities.invokeLater(() -> {
                 VentanaInicio ventana = new VentanaInicio();

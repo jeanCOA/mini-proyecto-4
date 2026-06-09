@@ -185,10 +185,6 @@ public class CampoBatalla implements SujetoDuelo { // clase del duelo principal
         return null; // si no hay ganador aun
     }
 
-    public void notificarGanador(Jugador ganador) {
-        notificarObservadores("GANADOR", ganador.getNombre());
-    }
-
     public void notificarGanador(Jugador ganador) { // avisa al ganador
         notificarObservadores("GANADOR", ganador.getNombre()); // notificacion final
     }
