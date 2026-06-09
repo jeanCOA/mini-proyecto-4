@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CementerioSet {
+    
 
     // set de nombres unicos - no admite duplicados y esto es exactamente lo que necesitamos
     private Set<String> nombresDestruidos;
