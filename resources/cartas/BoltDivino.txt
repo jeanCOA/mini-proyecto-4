@@ -1,0 +1,4 @@
+clase=model.cards.trap.BoltDivino
+nombre=Bolt Divino
+descripcion=Destruye un monstruo aleatorio del oponente.
+tipo=TRAMPA

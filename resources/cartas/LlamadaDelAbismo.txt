@@ -1,0 +1,4 @@
+clase=model.cards.magic.LlamadaDelAbismo
+nombre=Llamada del Abismo
+descripcion=Robas 1 carta, pero pierdes 500 LP.
+tipo=MAGICA

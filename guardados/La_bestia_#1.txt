@@ -1,0 +1,23 @@
+# Partida guardada - Yu-Gi-Oh!
+turno=4
+primerTurno=false
+jugadorActivo=Kaiba
+timestamp=1780920156215
+J1.nombre=Yugi
+J1.lp=8000
+J1.yaJugo=true
+J1.yaAtaco=false
+J1.bloqueado=false
+J1.mano=Bestia del Bosque,Caballero Real,Hechicero del Caos,Guardian del Hierro
+J1.campo=Guerrero De La Luz|3|1200|1000|true|false
+J1.trampas=
+J1.mazo=Renacer del Fénix,Guardian del Hierro,Destino Inexorable,Caballero Real,Llamada del Abismo,Escudo de Atenea,Bolt Divino,Dragon Ancestral,Cura Milagrosa,Hechicero del Caos,Bestia del Bosque,Guardian del Hierro,Guerrero De La Luz,Hechicero del Caos,Bestia del Bosque,Cura Milagrosa,Guerrero De La Luz,Hechicero del Caos,Bestia del Bosque
+J2.nombre=Kaiba
+J2.lp=8000
+J2.yaJugo=true
+J2.yaAtaco=true
+J2.bloqueado=false
+J2.mano=Reflejo Mágico,Caballero Real,Dragon Ancestral,Guerrero De La Luz,Espejo de Almas
+J2.campo=Bestia del Bosque|4|1500|1200|false|false
+J2.trampas=Tormenta de Truenos
+J2.mazo=Caballero Real,Guardian del Hierro,Pot of Greed,Caballero Real,Espada de Zeus,Escudo de Atenea,Bestia del Bosque,Robo Forzado,Campo Minado,Dragon Ancestral,Guardian del Hierro,Fisura,Hechicero del Caos,Pot of Greed,Escudo Sagrado,Espada de Zeus,Contra-Ataque,Guerrero De La Luz

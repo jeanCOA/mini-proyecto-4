@@ -1,59 +1,59 @@
-// Clase para el mazo de cartas del jugador
-// se usa para barajar robar y repartir cartas al empezar
-package model;
+// mazo de cartas como una pila para robar rapido    // estilo chico de 16 anos
+// la carta que se roba siempre es la de arriba    // no hay puntos ni tildes
+package model; // paquete del modelo
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.ArrayDeque; // deque para la pila
+import java.util.ArrayList; // lista para convertir y desordenar
+import java.util.Collections; // para barajar
+import java.util.List; // lista generica
 
-public class Mazo {
+public class Mazo { // clase que representa el mazo
 
-    // cartas que quedan en el mazo
-    private List<Carta> cartas;
+    // pila de cartas    // el primer elemento es el de arriba
+    private ArrayDeque<Carta> cartas; // cartas dentro del mazo
 
-    public Mazo(boolean usarFabrica) {
-        this.cartas = new ArrayList<>();
-        if (usarFabrica) {
-            this.agregarCartas(FabricaDeCartas.crearMazoCompleto());
-            this.barajar();
+    public Mazo(boolean usarFabrica) { // constructor del mazo
+        this.cartas = new ArrayDeque<>(); // creo la pila vacia
+        if (usarFabrica) { // si quiero usar la fabrica
+            this.agregarCartas(FabricaDeCartas.crearMazoCompleto()); // agrego las cartas del mazo completo
+            this.barajar(); // mezclo el mazo
         }
     }
 
-    // mezcla las cartas del mazo aleatoriamente
-    public void barajar() {
-        Collections.shuffle(cartas);
+    public void barajar() { // mezcla las cartas del mazo
+        List<Carta> lista = new ArrayList<>(cartas); // convierto la pila a lista
+        Collections.shuffle(lista); // desordeno la lista
+        cartas.clear(); // borro el mazo viejo
+        for (Carta c : lista) cartas.push(c); // vuelvo a poner las cartas en la pila
     }
 
-    // roba la primera carta del mazo
-    public Carta robar() {
-        if (estaVacio()) return null;
-        return cartas.remove(0);
+    public Carta robar() { // roba la carta de arriba
+        if (estaVacio()) return null; // si no hay cartas regreso null
+        return cartas.pop(); // saco la carta de arriba rapido
     }
 
-    // revisa si el mazo ya no tiene cartas
-    public boolean estaVacio() { return cartas.isEmpty(); }
+    public boolean estaVacio() { return cartas.isEmpty(); } // true si no hay cartas
+    public int tamano() { return cartas.size(); } // cuenta las cartas que quedan
 
-    // devuelve cuantas cartas quedan en el mazo
-    public int tamano() { return cartas.size(); }
-
-    // saca varias cartas para dar la mano inicial
-    public List<Carta> repartir(int n) {
-        List<Carta> manoRepartida = new ArrayList<>();
-        for (int i = 0; i < n; i++) {
-            Carta c = this.robar();
-            if (c != null) manoRepartida.add(c);
-            else break;
+    public List<Carta> repartir(int n) { // da n cartas para la mano inicial
+        List<Carta> manoRepartida = new ArrayList<>(); // lista donde va la mano
+        for (int i = 0; i < n; i++) { // repito n veces
+            Carta c = this.robar(); // saco una carta del mazo
+            if (c != null) manoRepartida.add(c); // si hay carta la agrego a la mano
+            else break; // si no quedan cartas paro
         }
-        return manoRepartida;
+        return manoRepartida; // regreso la mano lista
     }
 
-    // agrega cartas al mazo sin barajar
-    public void agregarCartas(List<? extends Carta> nuevasCartas) {
-        this.cartas.addAll(nuevasCartas);
+    public void agregarCartas(List<? extends Carta> nuevasCartas) { // agrega varias cartas al mazo
+        for (Carta c : nuevasCartas) cartas.push(c); // las puse arriba en la pila
     }
 
-    // devuelve copia de la lista de cartas del mazo
-    public List<Carta> getCartas() {
-        return new ArrayList<>(cartas);
+    public List<Carta> getCartas() { // devuelve copia de las cartas sin tocar el mazo
+        return new ArrayList<>(cartas); // copio la pila en lista
+    }
+
+    public void agregarCarta(Carta carta) { // agrega una carta al fondo del mazo
+        cartas.addLast(carta); // la agrego al final para cargar partidas
     }
 }

@@ -1,0 +1,4 @@
+clase=model.cards.magic.CuraMilagrosa
+nombre=Cura Milagrosa
+descripcion=Aumenta +1000 LP a tu contador de vida.
+tipo=MAGICA
