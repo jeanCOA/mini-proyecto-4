@@ -2,30 +2,20 @@ package controller;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import model.Carta;
-import model.CartaMonstruo;
-import model.CartaTrampa;
-import model.CampoBatalla;
-import model.Contexto;
-import model.Jugador;
-import model.ObservadorDuelo;
-import model.command.ComandoAtacar;
-import model.command.ComandoJugarCarta;
-import model.command.HistorialComandos;
-import model.memento.EstadoDuelo;
-import model.memento.MementoManager;
+import model.*;
+import model.command.*;
+import model.memento.*;
 import utils.GestorPersistencia;
 import view.IDuelView;
 
-// Este controlador hace de puente entre lo que ve la interfaz y lo que pasa en el juego.
-// Acá se deciden las acciones del jugador y también se avisa a la vista cuando algo cambia.
+// controlador principal del duelo
+// conecta la vista con el modelo y maneja todas las acciones del jugador
 public class DuelController implements ObservadorDuelo {
 
     private final CampoBatalla campo;
     private IDuelView vista;
 
-    // Acá guardamos la historia de acciones para poder deshacer la última jugada si hace falta.
+    // historial de comandos para poder deshacer la ultima jugada
     private final HistorialComandos historial;
     private final MementoManager mementoManager;
 
@@ -33,7 +23,7 @@ public class DuelController implements ObservadorDuelo {
         this.campo = campo;
         this.historial = new HistorialComandos();
         this.mementoManager = new MementoManager();
-        // Nos suscribimos al campo para enterarnos de eventos como ganador o cambio de turno.
+        // nos suscribimos al campo para recibir sus eventos
         campo.registrarObservador(this);
     }
 
@@ -41,7 +31,7 @@ public class DuelController implements ObservadorDuelo {
         this.vista = vista;
     }
 
-    // El campo nos avisa cuando pasa algo importante, y acá decidimos qué hacer con ese aviso.
+    // el campo nos avisa de lo que pasa y aqui decidimos que hacer con eso
     @Override
     public void onEventoDuelo(String tipoEvento, String detalle) {
         switch (tipoEvento) {
@@ -52,7 +42,7 @@ public class DuelController implements ObservadorDuelo {
                 if (vista != null) vista.agregarLog(detalle + " se quedo sin mazo");
                 break;
             case "INICIO_TURNO":
-                // Cuando empieza un turno nuevo, limpiamos el historial de deshacer para que no se mezcle.
+                // turno nuevo = limpiamos el historial de undo
                 if (vista != null) historial.limpiar();
                 break;
             default:
@@ -66,8 +56,7 @@ public class DuelController implements ObservadorDuelo {
         vista.actualizarUI();
     }
 
-    // Aquí se juega una carta desde la mano.
-    // Uso el patrón Command para que la acción se pueda deshacer si hace falta.
+    // jugar carta usando el patron Command para poder deshacerlo
     public void accionJugarCarta() {
         Jugador activo   = campo.getJugadorActivo();
         Jugador oponente = campo.getOponente();
@@ -88,7 +77,7 @@ public class DuelController implements ObservadorDuelo {
         Carta carta = mano.get(idx);
         int indiceSacrificio = -1;
 
-        // Si la carta es un monstruo de nivel alto, necesita sacrificio antes de invocarse.
+        // si el monstruo es de nivel alto necesita sacrificio
         if (carta.getTipo().equals("MONSTRUO")) {
             CartaMonstruo mon = (CartaMonstruo) carta;
             if (mon.getnivelCarta() > 4) {
@@ -107,7 +96,7 @@ public class DuelController implements ObservadorDuelo {
             }
         }
 
-        // Creamos el comando y lo ejecutamos. Si algo falla, lo sacamos del historial.
+        // creamos el comando y lo ejecutamos
         ComandoJugarCarta cmd = new ComandoJugarCarta(activo, ctx, idx, indiceSacrificio);
         historial.ejecutar(cmd);
 
@@ -115,15 +104,14 @@ public class DuelController implements ObservadorDuelo {
             vista.agregarLog(activo.getNombre() + " jugo: " + carta.getNombre());
             verificarGanador();
         } else {
-            // Si no pudo jugarse, lo quitamos del historial para que no quede como si sí pasó.
+            // si fallo lo sacamos del historial
             historial.deshacer();
             vista.agregarLog("No se pudo jugar la carta");
         }
         vista.actualizarUI();
     }
 
-    // Aquí se resuelve un ataque entre monstruos.
-    // También se revisa si el oponente quiere responder con una trampa antes de seguir.
+    // ataque usando Command igual que con jugar carta
     public void accionAtacar() {
         Jugador activo   = campo.getJugadorActivo();
         Jugador oponente = campo.getOponente();
@@ -155,7 +143,7 @@ public class DuelController implements ObservadorDuelo {
             defensor = defensores.get(idxDef);
         }
 
-        // Antes del combate, preguntamos al oponente si quiere responder con una trampa.
+        // antes del ataque le preguntamos al oponente si quiere activar una trampa
         Contexto ctxDefensa = new Contexto(oponente, activo, campo);
         ctxDefensa.setMonstruoAtacante(atacante);
 
@@ -181,7 +169,7 @@ public class DuelController implements ObservadorDuelo {
         vista.actualizarUI();
     }
 
-    // Deshace la última acción del turno, si es que hay algo para volver atrás.
+    // deshace la ultima accion del turno si se puede
     public void accionDeshacer() {
         if (!historial.puedeDeshacer()) {
             vista.agregarLog("No hay acciones para deshacer en este turno");
@@ -193,7 +181,7 @@ public class DuelController implements ObservadorDuelo {
         vista.actualizarUI();
     }
 
-    // Este método le pregunta al defensor si quiere usar una trampa en respuesta al ataque.
+    // le ofrece al defensor activar una trampa antes de que llegue el ataque
     private boolean ofrecerRespuestaTrampas(Jugador defensor, Contexto ctx) {
         List<CartaTrampa> trampas = defensor.getZonaTrampas();
         List<Integer> indices = new ArrayList<>();
@@ -293,7 +281,7 @@ public class DuelController implements ObservadorDuelo {
             "Es el turno de:\n" + campo.getJugadorActivo().getNombre().toUpperCase());
     }
 
-    // Guarda el estado actual del duelo para poder retomarlo después.
+    // guarda la partida actual con Memento + GestorPersistencia
     public void accionGuardarPartida() {
         MementoManager mm = new MementoManager();
         EstadoDuelo snapshot = mm.capturar(campo);
@@ -322,7 +310,7 @@ public class DuelController implements ObservadorDuelo {
         }
     }
 
-    // Limpia el nombre del archivo para que no tenga caracteres raros que rompan la guardada.
+    // limpia caracteres raros del nombre del archivo para que no rompa el sistema
     private String normalizarNombreArchivo(String nombreArchivo) {
         String limpio = nombreArchivo.trim();
         if (limpio.toLowerCase().endsWith(".txt")) {
@@ -331,7 +319,7 @@ public class DuelController implements ObservadorDuelo {
         return limpio.replaceAll("[\\\\/:*?\"<>|]", "_");
     }
 
-    // Revisa si ya hay un ganador y, si sí, lo registra y avisa a la interfaz.
+    // checa si hay ganador y si hay lo registra y avisa a la vista
     private void verificarGanador() {
         if (campo.hayGanador()) {
             Jugador ganador = campo.getGanador();
