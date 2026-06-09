@@ -1,5 +1,8 @@
 package controller;
 
+import java.io.IOException;
+import java.util.List;
+
 import model.CampoBatalla;
 import model.Jugador;
 import model.memento.EstadoDuelo;
@@ -7,11 +10,9 @@ import model.memento.MementoManager;
 import utils.GestorPersistencia;
 import view.VentanaDuelo;
 import view.VentanaInicio;
-import java.io.IOException;
-import java.util.List;
 
-// controla la pantalla de inicio
-// arranca duelos nuevos o carga partidas guardadas
+// Esta clase organiza lo primero que ve el usuario: empezar un duelo nuevo
+// o volver a abrir una partida guardada desde antes.
 public class InicioController {
 
     private final VentanaInicio vista;
@@ -20,9 +21,15 @@ public class InicioController {
         this.vista = vista;
     }
 
+    // Arranca un duelo completamente nuevo.
+    // Si el usuario no pone nombres, usamos valores por defecto para que no se rompa nada.
     public void iniciarDuelo(String n1, String n2) {
-        if (n1 == null || n1.isBlank()) n1 = "Jugador 1";
-        if (n2 == null || n2.isBlank()) n2 = "Jugador 2";
+        if (n1 == null || n1.isBlank()) {
+            n1 = "Jugador 1";
+        }
+        if (n2 == null || n2.isBlank()) {
+            n2 = "Jugador 2";
+        }
 
         Jugador j1 = new Jugador(n1);
         Jugador j2 = new Jugador(n2);
@@ -38,7 +45,8 @@ public class InicioController {
         vista.dispose();
     }
 
-    // carga un archivo de guardado y reconstruye el estado del duelo
+    // Aquí cargamos una partida vieja y la volvemos a montar como si fuera nueva.
+    // El snapshot guarda todo el estado, y el manager se encarga de restaurarlo.
     public void cargarPartida(String nombreArchivo) {
         try {
             EstadoDuelo snapshot = GestorPersistencia.getInstance().cargarPartida(nombreArchivo);
@@ -64,12 +72,12 @@ public class InicioController {
         }
     }
 
-    // devuelve la lista de guardados disponibles para mostrar en el dialogo
+    // Devuelve los archivos de guardado que ya existen, para mostrarlos en la pantalla.
     public List<String> getGuardados() {
         return GestorPersistencia.getInstance().listarGuardados();
     }
 
-    // devuelve las estadisticas historicas para mostrar en la pantalla de inicio
+    // Trae las estadísticas guardadas para mostrar algo extra en la pantalla principal.
     public String getEstadisticas() {
         return GestorPersistencia.getInstance().leerEstadisticas();
     }
