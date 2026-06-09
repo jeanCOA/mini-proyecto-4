@@ -1,0 +1,23 @@
+# Partida guardada - Yu-Gi-Oh!
+turno=8
+primerTurno=false
+jugadorActivo=Jean
+timestamp=1780941377891
+J1.nombre=Juan
+J1.lp=8000
+J1.yaJugo=true
+J1.yaAtaco=false
+J1.bloqueado=false
+J1.mano=Guerrero De La Luz,Bestia del Bosque,Campo Minado,Guardian del Hierro
+J1.campo=Bestia del Bosque|4|1500|1200|true|false;Guerrero De La Luz|3|1200|1000|true|false
+J1.trampas=Escudo Sagrado,Destino Inexorable
+J1.mazo=Guardian del Hierro,Guerrero De La Luz,Dragon Ancestral,Guerrero De La Luz,Cura Milagrosa,Escudo de Atenea,Bestia del Bosque,Guerrero De La Luz,Caballero Real,Hechicero del Caos,Bestia del Bosque,Caballero Real,Guerrero De La Luz,Contra-Ataque,Espada de Zeus,Hechicero del Caos,Caballero Real
+J2.nombre=Jean
+J2.lp=8000
+J2.yaJugo=false
+J2.yaAtaco=false
+J2.bloqueado=false
+J2.mano=Guardian del Hierro,Espada de Zeus,Tormenta de Truenos,Bolt Divino,Guardian del Hierro,Dragon Ancestral
+J2.campo=Caballero Real|6|2300|2000|true|false
+J2.trampas=Reflejo Mágico
+J2.mazo=Fisura,Bestia del Bosque,Dragon Ancestral,Pot of Greed,Caballero Real,Hechicero del Caos,Pot of Greed,Espejo de Almas,Guardian del Hierro,Cura Milagrosa,Renacer del Fénix,Robo Forzado,Llamada del Abismo,Hechicero del Caos,Escudo de Atenea,Hechicero del Caos

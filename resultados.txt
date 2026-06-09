@@ -1,0 +1,4 @@
+2026-06-01 14:23:11 | Yugi | Kaiba | Yugi | turnos:12 | LP1:3200 | LP2:0
+2026-06-02 10:05:44 | Kaiba | Joey | Kaiba | turnos:8 | LP1:7800 | LP2:0
+2026-06-03 18:47:30 | Joey | Yugi | Yugi | turnos:20 | LP1:0 | LP2:1500
+2026-06-08 13:05:03 | Juan | Jean | Jean | turnos:18 | LP1:0 | LP2:7200

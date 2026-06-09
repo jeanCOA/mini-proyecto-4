@@ -1,0 +1,4 @@
+clase=model.cards.trap.ContraAtaque
+nombre=Contra-Ataque
+descripcion=Niega un ataque del oponente y destruye al monstruo atacante.
+tipo=TRAMPA
