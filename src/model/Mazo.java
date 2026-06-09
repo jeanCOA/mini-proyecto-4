@@ -56,9 +56,4 @@ public class Mazo {
     public List<Carta> getCartas() {
         return new ArrayList<>(cartas);
     }
-
-    // agrega al final de la pila, se usa al cargar partida
-    public void agregarCarta(Carta carta) {
-        cartas.addLast(carta);
-    }
 }
