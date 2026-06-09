@@ -1,36 +1,30 @@
-// Clase para el jugador que controla mano mazo campo y vida
-// aqui se decide si puede jugar cartas atacar o activar trampas
+// jugador con todo su estado: mano mazo campo trampas y vida
+// la mano es LinkedList porque addFirst() es O(1) y modela bien robar cartas
 package model;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.ArrayList;
 
 public class Jugador {
 
-    // nombre del jugador
     private String nombre;
-    // puntos de vida del jugador
     private int lp = 8000;
-    // si ya jugo una carta este turno
     private boolean yaJugoCartaEsteTurno = false;
-    // si ya ataco con algun monstruo este turno
     private boolean yaAtacoEsteTurno = false;
-    // si esta bloqueado para jugar cartas el proximo turno
     private boolean bloqueadoProximoTurno = false;
-    // cartas que tiene en la mano
-    private List<Carta> mano;
-    // mazo de donde roba las cartas
+
+    // LinkedList para la mano - addFirst O(1) al robar cartas
+    private LinkedList<Carta> mano;
     private Mazo mazo;
-    // monstruos que estan en el campo
     private List<CartaMonstruo> campo;
-    // trampas colocadas en el campo
     private List<CartaTrampa> zonaTrampas;
 
     public Jugador(String nombre) {
         this.nombre = nombre;
         this.mazo = new Mazo(false);
         this.lp = 8000;
-        this.mano = new ArrayList<>();
+        this.mano = new LinkedList<>();
         this.campo = new ArrayList<>();
         this.zonaTrampas = new ArrayList<>();
         this.yaJugoCartaEsteTurno = false;
@@ -39,7 +33,6 @@ public class Jugador {
     }
 
     public String getNombre() { return nombre; }
-
     public int getLp() { return lp; }
 
     public void setLp(int lp) {
@@ -47,35 +40,28 @@ public class Jugador {
         if (this.lp < 0) this.lp = 0;
     }
 
-    // devuelve las cartas que el jugador tiene en la mano
+    // retorna List para que el resto del codigo no sepa que es LinkedList internamente
     public List<Carta> getMano()            { return mano; }
-    // devuelve los monstruos que el jugador tiene en el campo
     public List<CartaMonstruo> getCampo()   { return campo; }
-    // devuelve el mazo del jugador
     public Mazo getMazo()                   { return mazo; }
-    // permite cambiar el mazo si hace falta en el duelo
     public void setMazo(Mazo mazo)          { this.mazo = mazo; }
-    // devuelve las trampas que el jugador ya colocó
     public List<CartaTrampa> getZonaTrampas() { return zonaTrampas; }
 
-    // roba una carta desde el mazo a la mano
+    // roba del mazo y la pone al frente de la mano con addFirst O(1)
     public void robarCarta() {
         if (mazo != null) {
             Carta c = mazo.robar();
-            if (c != null) mano.add(c);
+            if (c != null) mano.addFirst(c);
         }
     }
 
-    // quita puntos de vida al jugador
     public void recibirDanio(int pts) {
         lp -= pts;
         if (lp < 0) lp = 0;
     }
 
-    // suma vida cuando se cura
     public void curarDanio(int pts) { lp += pts; }
 
-    // revisa si hay monstruos en campo para atacar o defender
     public boolean tieneMonstruosEnCampo()  { return !campo.isEmpty(); }
     public boolean tieneCartasEnMazo()      { return mazo != null && !mazo.estaVacio(); }
     public boolean puedeJugarCarta()        { return !yaJugoCartaEsteTurno; }
@@ -83,7 +69,7 @@ public class Jugador {
     public void bloquearJugarCartaProximoTurno() { bloqueadoProximoTurno = true; }
     public boolean isBloqueadoProximoTurno()     { return bloqueadoProximoTurno; }
 
-    // resetea el estado de turno para poder jugar y atacar otra vez
+    // resetea los flags del turno y habilita monstruos para atacar
     public void resetTurno() {
         if (bloqueadoProximoTurno) {
             yaJugoCartaEsteTurno = true;
@@ -97,7 +83,6 @@ public class Jugador {
         }
     }
 
-    // intenta jugar la carta de la mano segun su tipo
     public boolean jugarCarta(int indice, Contexto ctx, int indiceSacrificio) {
         if (indice < 0 || indice >= mano.size()) return false;
         if (yaJugoCartaEsteTurno) return false;
@@ -106,6 +91,7 @@ public class Jugador {
 
         if (carta.getTipo().equals("MONSTRUO")) {
             CartaMonstruo monstruo = (CartaMonstruo) carta;
+            // monstruos de nivel 5+ requieren sacrificio
             if (monstruo.getnivelCarta() > 4) {
                 if (campo.isEmpty()) return false;
                 if (indiceSacrificio < 0 || indiceSacrificio >= campo.size()) return false;
@@ -136,7 +122,6 @@ public class Jugador {
         return false;
     }
 
-    // activa una trampa cuando se cumplen las condiciones
     public boolean activarTrampa(int indiceTrampa, Contexto ctx) {
         if (indiceTrampa < 0 || indiceTrampa >= zonaTrampas.size()) return false;
         CartaTrampa trampa = zonaTrampas.get(indiceTrampa);
@@ -146,7 +131,6 @@ public class Jugador {
         return true;
     }
 
-    // revisa si hay cartas trampa que se pueden activar ahora
     public boolean hayTrampaActivable(Contexto ctx) {
         for (CartaTrampa t : zonaTrampas) {
             if (t.puedoActivarme(ctx)) return true;
@@ -157,4 +141,6 @@ public class Jugador {
     public boolean isYaAtacoEsteTurno()     { return yaAtacoEsteTurno; }
     public void setYaAtacoEsteTurno(boolean v) { yaAtacoEsteTurno = v; }
     public boolean isYaJugoCartaEsteTurno() { return yaJugoCartaEsteTurno; }
+    public void setYaJugoCartaEsteTurno(boolean v) { yaJugoCartaEsteTurno = v; }
+    public void setBloqueadoProximoTurno(boolean v) { bloqueadoProximoTurno = v; }
 }
