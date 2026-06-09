@@ -1,0 +1,23 @@
+# Partida guardada - Yu-Gi-Oh!
+turno=1
+primerTurno=true
+jugadorActivo=Jugador 2
+timestamp=1780919709422
+J1.nombre=Jugador 1
+J1.lp=8000
+J1.yaJugo=false
+J1.yaAtaco=false
+J1.bloqueado=false
+J1.mano=Hechicero del Caos,Guardian del Hierro,Guerrero De La Luz,Dragon Ancestral,Renacer del Fénix
+J1.campo=
+J1.trampas=
+J1.mazo=Espejo de Almas,Caballero Real,Espada de Zeus,Hechicero del Caos,Escudo de Atenea,Bestia del Bosque,Dragon Ancestral,Escudo de Atenea,Bestia del Bosque,Guardian del Hierro,Bolt Divino,Hechicero del Caos,Dragon Ancestral,Guerrero De La Luz,Bestia del Bosque,Hechicero del Caos,Hechicero del Caos,Caballero Real,Guerrero De La Luz,Contra-Ataque
+J2.nombre=Jugador 2
+J2.lp=8000
+J2.yaJugo=true
+J2.yaAtaco=false
+J2.bloqueado=false
+J2.mano=Escudo Sagrado,Tormenta de Truenos,Guardian del Hierro,Cura Milagrosa
+J2.campo=
+J2.trampas=
+J2.mazo=Campo Minado,Caballero Real,Pot of Greed,Llamada del Abismo,Guerrero De La Luz,Guardian del Hierro,Reflejo Mágico,Bestia del Bosque,Guerrero De La Luz,Caballero Real,Pot of Greed,Guardian del Hierro,Cura Milagrosa,Destino Inexorable,Robo Forzado,Bestia del Bosque,Guerrero De La Luz,Bestia del Bosque,Espada de Zeus,Caballero Real
